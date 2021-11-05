@@ -1,6 +1,8 @@
 package common;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * @author CJR
@@ -38,5 +40,22 @@ public class TreeNode {
             }
         }
         return list.get(0);
+    }
+
+    public static int[] levelOrder(TreeNode root) {
+        if (root == null) return new int[0];
+        Queue<TreeNode> queue = new LinkedList<TreeNode>(){{
+            add(root);
+        }};
+        ArrayList<Integer> integers = new ArrayList<>();
+
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            integers.add(node.val);
+            if (node.left != null) queue.add(node.left);
+            if (node.right != null) queue.add(node.right);
+        }
+
+        return integers.stream().mapToInt(x -> x).toArray();
     }
 }
