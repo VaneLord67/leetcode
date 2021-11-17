@@ -8,6 +8,14 @@ import java.util.Map;
  * @create 2021-10-27-16:40
  */
 public class MySolution {
+    public static void main(String[] args) {
+        int[] preorder = {5,2,3,2,3,1,4};
+//        int[] preorder = {3,9,20,15,7};
+        int[] inorder = {2,5,3,2,1,3,4};
+//        int[] inorder = {9,3,15,20,7};
+        new Solution().buildTree(preorder,inorder);
+    }
+
     private Map<Integer,Integer> indexMap = new HashMap();
 
     public TreeNode myBuildTree(int[] preorder,int[] inorder,int preorder_left,int preorder_right,int inorder_left,int inorder_right){
