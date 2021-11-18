@@ -3,8 +3,6 @@ package offer37;
 import common.TreeNode;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * @author CJR
@@ -30,7 +28,6 @@ public class Codec {
         String s = codec.serialize(node1);
         System.out.println(s);
 //        codec.deserialize(codec.serialize(node1));
-
     }
 
 
@@ -80,9 +77,6 @@ public class Codec {
         }
         return root;
     }
-
-
-
 
 
 }
