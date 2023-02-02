@@ -9,6 +9,7 @@ import java.util.Arrays;
  */
 
 /**
+ * 最大堆的实现以及堆排序（排序后数组元素从小到大）
  * 如果只需要二叉堆的排序，我们只调用构建二叉堆和下沉方法即可。
  * 上浮方法是插入的时候调用的。先在堆的末尾新增节点，并让新增的节点上浮。
  */
@@ -47,7 +48,7 @@ public class HeapSort {
         for (int i = (array.length - 2) / 2; i >= 0; i--) {
             downAdjust(array, i, array.length); // 构建二叉堆：让所有非叶子节点依次下沉，从最后一个非叶子节点开始。
         }
-        System.out.println(Arrays.toString(array));
+//        System.out.println(Arrays.toString(array));
         for (int i = array.length - 1; i > 0; i--) {    // 交换堆顶和堆的最后一个元素，并让新的堆顶下沉
             int temp = array[i];
             array[i] = array[0];
@@ -58,13 +59,13 @@ public class HeapSort {
 
     public static void main(String[] args) {
         int[] arr = new int[]{1,3,2,6,5,7,8,9,10,0};
-//        heapSort(arr);
-//        System.out.println(Arrays.toString(arr));
-        for (int i = (arr.length - 2) / 2; i >= 0; i--) {
-            downAdjust(arr, i, arr.length); // 构建二叉堆：让所有非叶子节点依次下沉，从最后一个非叶子节点开始。
-        }
-        arr[9] = 11;
-        upAdjust(arr);
+        heapSort(arr);
         System.out.println(Arrays.toString(arr));
+//        for (int i = (arr.length - 2) / 2; i >= 0; i--) {
+//            downAdjust(arr, i, arr.length); // 构建二叉堆：让所有非叶子节点依次下沉，从最后一个非叶子节点开始。
+//        }
+//        arr[9] = 11;
+//        upAdjust(arr);
+//        System.out.println(Arrays.toString(arr));
     }
 }
