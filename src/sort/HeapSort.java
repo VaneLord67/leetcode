@@ -69,3 +69,95 @@ public class HeapSort {
 //        System.out.println(Arrays.toString(arr));
     }
 }
+
+class MyHeap {
+    // 最小堆
+    private int[] values;
+    private int length;
+
+    public boolean isEmpty() {
+        return length == 0;
+    }
+
+    public MyHeap(int len) {
+        values = new int[len];
+        length = 0;
+    }
+
+    // 插入
+    public void insert(int number) {
+        if (length + 1 > values.length) {
+            throw new RuntimeException("溢出");
+        }
+        length++;
+        int curIdx = length - 1;
+        int parentIdx = (length - 1) / 2;
+        while (parentIdx >= 0 && values[parentIdx] > number) {
+            values[curIdx] = values[parentIdx];
+            curIdx = parentIdx;
+            parentIdx = (parentIdx - 1) / 2;
+        }
+        values[curIdx] = number;
+    }
+    // 删除
+    public int delete() {
+        if (length == 0) {
+            throw new RuntimeException("empty data structure!");
+        }
+        int res = values[0];
+        int temp = values[length - 1];
+        values[0] = values[length - 1];
+        values[length - 1] = 0;
+        length--;
+        int curIdx = 0;
+        int leftSonIdx = 1;
+        int rightSonIdx = 2;
+        while (leftSonIdx < length) {
+            int small = rightSonIdx < length ? Math.min(values[leftSonIdx], values[rightSonIdx]) : values[leftSonIdx];
+            if (temp < small) {
+                break;
+            }
+            int smallIdx;
+            if (rightSonIdx < length) {
+                smallIdx = values[leftSonIdx] < values[rightSonIdx] ? leftSonIdx : rightSonIdx;
+            } else {
+                smallIdx = leftSonIdx;
+            }
+            values[curIdx] = values[smallIdx];
+            curIdx = smallIdx;
+            leftSonIdx = 2 * curIdx + 1;
+            rightSonIdx = 2 * curIdx + 2;
+        }
+        values[curIdx] = temp;
+        return res;
+    }
+
+    // 构造二叉堆
+    public void build(int[] numbers) {
+        this.values = numbers;
+        this.length = numbers.length;
+        for (int nonLeafIdx = (length - 2) / 2; nonLeafIdx >= 0; nonLeafIdx--) {
+            int curIdx = nonLeafIdx;
+            int leftSonIdx = 2 * curIdx + 1;
+            int rightSonIdx = 2 * curIdx + 2;
+            int temp = values[curIdx];
+            while (leftSonIdx < length) {
+                int small = rightSonIdx < length ? Math.min(values[leftSonIdx], values[rightSonIdx]) : values[leftSonIdx];
+                if (temp < small) {
+                    break;
+                }
+                int smallIdx;
+                if (rightSonIdx < length) {
+                    smallIdx = values[leftSonIdx] < values[rightSonIdx] ? leftSonIdx : rightSonIdx;
+                } else {
+                    smallIdx = leftSonIdx;
+                }
+                values[curIdx] = values[smallIdx];
+                curIdx = smallIdx;
+                leftSonIdx = 2 * curIdx + 1;
+                rightSonIdx = 2 * curIdx + 2;
+            }
+            values[curIdx] = temp;
+        }
+    }
+}
