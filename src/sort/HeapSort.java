@@ -1,6 +1,5 @@
 package sort;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -25,6 +24,7 @@ public class HeapSort {
         }
         array[childIndex] = temp;
     }
+
     public static void downAdjust(int[] array, int parentIndex, int length) {
         int temp = array[parentIndex];
         int childIndex = 2 * parentIndex + 1;       // 左孩子
@@ -48,7 +48,6 @@ public class HeapSort {
         for (int i = (array.length - 2) / 2; i >= 0; i--) {
             downAdjust(array, i, array.length); // 构建二叉堆：让所有非叶子节点依次下沉，从最后一个非叶子节点开始。
         }
-//        System.out.println(Arrays.toString(array));
         for (int i = array.length - 1; i > 0; i--) {    // 交换堆顶和堆的最后一个元素，并让新的堆顶下沉
             int temp = array[i];
             array[i] = array[0];
@@ -58,7 +57,7 @@ public class HeapSort {
     }
 
     public static void main(String[] args) {
-        int[] arr = new int[]{1,3,2,6,5,7,8,9,10,0};
+        int[] arr = new int[]{1, 3, 2, 6, 5, 7, 8, 9, 10, 0};
         heapSort(arr);
         System.out.println(Arrays.toString(arr));
 //        for (int i = (arr.length - 2) / 2; i >= 0; i--) {
@@ -70,94 +69,154 @@ public class HeapSort {
     }
 }
 
+class Heap {
+
+    private int[] heap;
+    private int length;
+
+    private void heapAdd(int num) {
+        length++;
+        heap[length - 1] = num;
+        int curIdx = length - 1;
+        int parentIdx = (curIdx - 1) / 2;
+        while (curIdx > 0 && num < heap[parentIdx]) {
+            heap[curIdx] = heap[parentIdx];
+            curIdx = parentIdx;
+            parentIdx = (parentIdx - 1) / 2;
+        }
+        heap[curIdx] = num;
+    }
+
+    private int heapRemove() {
+        int remove = heapPeek();
+        int temp = heap[length - 1];
+        length--;
+        int curIdx = 0;
+        int sonIdx = 1;
+        while (sonIdx < length) {
+            if (sonIdx + 1 < length && heap[sonIdx + 1] < heap[sonIdx]) {
+                sonIdx++;
+            }
+            if (temp <= heap[sonIdx]) {
+                break;
+            }
+            heap[curIdx] = heap[sonIdx];
+            curIdx = sonIdx;
+            sonIdx = 2 * sonIdx + 1;
+        }
+        heap[curIdx] = temp;
+        return remove;
+    }
+
+    private int heapPeek() {
+        return heap[0];
+    }
+
+    public int findKthLargest(int[] nums, int k) {
+        this.heap = new int[k];
+        this.length = 0;
+        for (int i = 0; i < k; i++) {
+            heapAdd(nums[i]);
+        }
+        for (int i = k; i < nums.length; i++) {
+            if (nums[i] > heapPeek()) {
+                heapRemove();
+                heapAdd(nums[i]);
+            }
+        }
+        return heapPeek();
+    }
+}
+
 class MyHeap {
     // 最小堆
-    private int[] values;
+    private int[] heap;
     private int length;
 
     public boolean isEmpty() {
         return length == 0;
     }
 
-    public MyHeap(int len) {
-        values = new int[len];
+    public MyHeap(int capacity) {
+        heap = new int[capacity];
         length = 0;
     }
 
     // 插入
     public void insert(int number) {
-        if (length + 1 > values.length) {
+        if (length + 1 > heap.length) {
             throw new RuntimeException("溢出");
         }
         length++;
         int curIdx = length - 1;
-        int parentIdx = (length - 1) / 2;
-        while (parentIdx >= 0 && values[parentIdx] > number) {
-            values[curIdx] = values[parentIdx];
+        int parentIdx = (curIdx - 1) / 2;
+        while (curIdx > 0 && heap[parentIdx] > number) {
+            heap[curIdx] = heap[parentIdx];
             curIdx = parentIdx;
             parentIdx = (parentIdx - 1) / 2;
         }
-        values[curIdx] = number;
+        heap[curIdx] = number;
     }
+
     // 删除
     public int delete() {
         if (length == 0) {
             throw new RuntimeException("empty data structure!");
         }
-        int res = values[0];
-        int temp = values[length - 1];
-        values[0] = values[length - 1];
-        values[length - 1] = 0;
+        int res = heap[0];
+        int temp = heap[length - 1];
+        heap[0] = heap[length - 1];
+        heap[length - 1] = 0;
         length--;
         int curIdx = 0;
         int leftSonIdx = 1;
         int rightSonIdx = 2;
         while (leftSonIdx < length) {
-            int small = rightSonIdx < length ? Math.min(values[leftSonIdx], values[rightSonIdx]) : values[leftSonIdx];
+            int small = rightSonIdx < length ? Math.min(heap[leftSonIdx], heap[rightSonIdx]) : heap[leftSonIdx];
             if (temp < small) {
                 break;
             }
             int smallIdx;
             if (rightSonIdx < length) {
-                smallIdx = values[leftSonIdx] < values[rightSonIdx] ? leftSonIdx : rightSonIdx;
+                smallIdx = heap[leftSonIdx] < heap[rightSonIdx] ? leftSonIdx : rightSonIdx;
             } else {
                 smallIdx = leftSonIdx;
             }
-            values[curIdx] = values[smallIdx];
+            heap[curIdx] = heap[smallIdx];
             curIdx = smallIdx;
             leftSonIdx = 2 * curIdx + 1;
             rightSonIdx = 2 * curIdx + 2;
         }
-        values[curIdx] = temp;
+        heap[curIdx] = temp;
         return res;
     }
 
     // 构造二叉堆
     public void build(int[] numbers) {
-        this.values = numbers;
+        this.heap = numbers;
         this.length = numbers.length;
         for (int nonLeafIdx = (length - 2) / 2; nonLeafIdx >= 0; nonLeafIdx--) {
             int curIdx = nonLeafIdx;
             int leftSonIdx = 2 * curIdx + 1;
             int rightSonIdx = 2 * curIdx + 2;
-            int temp = values[curIdx];
+            int temp = heap[curIdx];
             while (leftSonIdx < length) {
-                int small = rightSonIdx < length ? Math.min(values[leftSonIdx], values[rightSonIdx]) : values[leftSonIdx];
+                int small = rightSonIdx < length ? Math.min(heap[leftSonIdx], heap[rightSonIdx]) : heap[leftSonIdx];
                 if (temp < small) {
                     break;
                 }
                 int smallIdx;
                 if (rightSonIdx < length) {
-                    smallIdx = values[leftSonIdx] < values[rightSonIdx] ? leftSonIdx : rightSonIdx;
+                    smallIdx = heap[leftSonIdx] < heap[rightSonIdx] ? leftSonIdx : rightSonIdx;
                 } else {
                     smallIdx = leftSonIdx;
                 }
-                values[curIdx] = values[smallIdx];
+                heap[curIdx] = heap[smallIdx];
                 curIdx = smallIdx;
                 leftSonIdx = 2 * curIdx + 1;
                 rightSonIdx = 2 * curIdx + 2;
             }
-            values[curIdx] = temp;
+            heap[curIdx] = temp;
         }
     }
 }
